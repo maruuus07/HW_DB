@@ -1,0 +1,58 @@
+CREATE TABLE IF NOT EXISTS Genre (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(30) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Singer (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(40) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Album (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(40) NOT NULL,
+	year_al DATE NOT NULL 
+);
+
+CREATE TABLE IF NOT EXISTS Track (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(40) NOT NULL,
+	duration TIME NOT NULL,
+	album_id INTEGER REFERENCES Album(id)
+);
+
+CREATE TABLE IF NOT EXISTS Collection (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(40) NOT NULL,
+	year_col DATE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS GenreSinger (
+	id SERIAL PRIMARY KEY,
+	genre_id INTEGER NOT NULL REFERENCES Genre(id),
+	singer_id INTEGER NOT NULL REFERENCES Singer(id)
+);
+
+CREATE TABLE IF NOT EXISTS SingerAlbum (
+	id SERIAL PRIMARY KEY,
+	album_id INTEGER NOT NULL REFERENCES Album(id),
+	singer_id INTEGER NOT NULL REFERENCES Singer(id)
+);
+
+CREATE TABLE IF NOT EXISTS CollectionTrack (
+	id SERIAL PRIMARY KEY,
+	collection_id INTEGER NOT NULL REFERENCES Collection(id),
+	track_id INTEGER NOT NULL REFERENCES Track(id)
+);
+
+-- исправления столбцов
+ALTER TABLE album ALTER COLUMN year_al TYPE integer
+USING EXTRACT (YEAR FROM year_al)::integer;
+
+ALTER TABLE track ALTER COLUMN duration TYPE integer
+USING EXTRACT (YEAR FROM duration)::integer;
+
+ALTER TABLE collection ALTER COLUMN year_col TYPE integer
+USING EXTRACT (YEAR FROM year_col)::integer;
+
+ALTER TABLE genre ADD constraint unique_name UNIQUE (name);
